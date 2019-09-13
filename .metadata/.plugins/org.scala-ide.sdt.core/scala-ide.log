@@ -173,3 +173,4 @@ Caused by: com.cedarsoftware.util.io.JsonIoException: EOF reached prematurely
 2019-09-12 22:54:12,902  WARN [Worker-8] - ScalaProject - Project LearningScala runs on platform default installation.
 2019-09-13 00:37:14,634  WARN [Worker-10] - ScalaProject - Project LearningScala has platform default sourceLevel.
 2019-09-13 00:37:14,645  WARN [Worker-10] - ScalaProject - Project LearningScala runs on platform default installation.
+2019-09-13 00:50:45,758  WARN [org.scalaide.ui.internal.reconciliation.ScalaReconciler] - ImplicitHighlightingPresenter - Timeout while waiting for `askLoadedTyped` during semantic highlighting.
