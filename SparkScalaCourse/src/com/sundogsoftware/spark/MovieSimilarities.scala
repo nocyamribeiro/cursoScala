@@ -100,6 +100,7 @@ object MovieSimilarities {
     
     val data = sc.textFile("../ml-100k/u.data")
 
+    println(data.count())
     // Map ratings to key / value pairs: user ID => movie ID, rating
     val ratings = data.map(l => l.split("\t")).map(l => (l(0).toInt, (l(1).toInt, l(2).toDouble)))
     
