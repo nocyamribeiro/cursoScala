@@ -1,5 +1,0 @@
-INDEX VERSION 1.130+/home/maycon/Cursos/spark/.metadata/.plugins/org.eclipse.jdt.core
-1400047752.index
-3461910790.index
-3353234052.index
-3904597130.index
