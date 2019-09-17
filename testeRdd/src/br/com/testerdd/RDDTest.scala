@@ -12,13 +12,13 @@ object RDDTest {
 
     val logKV = logrdd.map(linha => (linha.split(" ")(0), linha))
 
+
     val ip_1 = logKV.map(par => (par._1, 1))
 
     val ip_cont = ip_1.reduceByKey((v1, v2) => v1 + v2)
 
     ip_cont.take(10).foreach(println)
-    
-    
+
     
   }
   

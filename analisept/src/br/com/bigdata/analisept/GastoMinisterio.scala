@@ -3,6 +3,7 @@ package br.com.bigdata.analisept
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions
+import org.apache.spark.sql.SaveMode
 
 object GastoMinisterio {
   
@@ -33,8 +34,7 @@ object GastoMinisterio {
     import spark.implicits._
     val tuplaOrgaosValor = df2.map(x => (x.getAs[String]("Nome do órgão superior"), x.getAs[Double]("value")))
     
-   
-    
+    df2.write.mode(SaveMode.Overwrite).csv("hdfs://localhost:9000/user/maycon/agrupamentoMinisterio.csv")
     
   }
   

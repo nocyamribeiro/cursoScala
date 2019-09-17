@@ -14,11 +14,13 @@ object ContadorTwitter {
                
      val palavras =  linhas.filter(row => row != header).flatMap(l => l.split(",")(3).split(" "))
      val hashtags = palavras.filter(word => word.startsWith("#"))
-     val hashtagKey = hashtags.map(hashtag => (hashtag.toUpperCase(),1))
+     val hashtagKey = hashtags.map(hashtag => (hashtag.toLowerCase(),1))
      val hashtagcontador = hashtagKey.reduceByKey((x, y) => x + y)
      val ordenacao = hashtagcontador.sortBy(x => x._2, false) 
      
      ordenacao.take(10).foreach(println)
+     
+     
      
     
   }

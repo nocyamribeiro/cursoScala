@@ -30,5 +30,7 @@ object ClienteVenda {
     
     cidgrup.take(10).foreach(println)
     
+    cidgrup.distinct.groupByKey()
+    
   }
 }
