@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[8]:
+# In[35]:
 
 
 import findspark
@@ -17,32 +17,32 @@ from decimal import Decimal
 from pyspark.sql import functions as F 
 
 
-# In[2]:
+# In[36]:
 
 
 spark = SparkSession.builder.appName("GastoMinisterio").getOrCreate()
 
 
-# In[3]:
+# In[37]:
 
 
 #converte decimal
 to_value = lambda v : Decimal(v.replace(",", "."))
 
 
-# In[4]:
+# In[38]:
 
 
 udf_to_value = functions.udf(to_value)
 
 
-# In[5]:
+# In[39]:
 
 
 caminhoArquivo = '/home/maycon/Cursos/spark/2019_Viagem.csv'
 
 
-# In[6]:
+# In[46]:
 
 
 def processarArquivo(caminhoArquivo) :
@@ -62,10 +62,20 @@ def processarArquivo(caminhoArquivo) :
     df2 = df2.withColumn("Min_por_cargos", udf_to_value(df2["Valor passagens"]))
     df2 = df2.withColumn("Total_por_cargos", udf_to_value(df2["Valor passagens"]))
     
+    df2 = df2.withColumn("Max_por_solicitante", udf_to_value(df2["Valor passagens"]))
+    df2 = df2.withColumn("Media_por_solicitante", udf_to_value(df2["Valor passagens"]))
+    df2 = df2.withColumn("Min_por_solicitante", udf_to_value(df2["Valor passagens"]))
+    df2 = df2.withColumn("Total_por_solicitante", udf_to_value(df2["Valor passagens"]))
+
+    df2 = df2.withColumn("Max_por_org_sup_diaria",    udf_to_value(df2["Valor diárias"]))
+    df2 = df2.withColumn("Media_por_org_sup_diaria", udf_to_value(df2["Valor diárias"]))
+    df2 = df2.withColumn("Min_por_org_sup_diaria",   udf_to_value(df2["Valor diárias"]))
+    df2 = df2.withColumn("Total_por_org_sup_diaria", udf_to_value(df2["Valor diárias"]))
+    
     return df2
 
 
-# In[9]:
+# In[47]:
 
 
 argumentos = []
@@ -80,7 +90,7 @@ else :
         lista.append(processarArquivo(i)) 
 
 
-# In[10]:
+# In[48]:
 
 
 dfUnido = lista[0]
@@ -91,7 +101,7 @@ for data in lista :
         i = i + 1
 
 
-# In[11]:
+# In[50]:
 
 
 tabela_aggnm_sup = dfUnido.groupBy("Nome do órgão superior").agg(F.max("Max_por_org_sup"), 
@@ -108,10 +118,39 @@ tabela_aggnm_cargo =dfUnido.groupBy("Cargo").agg(F.max("Max_por_cargos"),
                                           F.sum("Total_por_cargos")).sort('Cargo')
 
 
-# In[12]:
+
+# In[52]:
+
+
+dfUnido.printSchema()
+
+
+# In[57]:
+
+
+tabela_aggnm_solicitante =dfUnido.groupBy("Nome órgão solicitante").agg(F.max("Max_por_solicitante"), 
+                                          F.avg("Media_por_solicitante"), 
+                                          F.min("Min_por_solicitante"), 
+                                          F.sum("Total_por_solicitante")).sort('Nome órgão solicitante')
+
+tabela_aggnm_diaria =dfUnido.groupBy("Nome do órgão superior").agg(F.max("Max_por_org_sup_diaria"), 
+                                          F.avg("Media_por_org_sup_diaria"), 
+                                          F.min("Min_por_org_sup_diaria"), 
+                                          F.sum("Total_por_org_sup_diaria")).sort('Nome do órgão superior')
+
+
+# In[ ]:
 
 
 tabela_aggnm_sup.coalesce(1).write.mode('overwrite').option('header', "true").csv("agg_por_org_sup")
 tabela_aggnm_destino.coalesce(1).write.mode('overwrite').option('header', "true").csv("agg_por_destinos")
 tabela_aggnm_cargo.coalesce(1).write.mode('overwrite').option('header', "true").csv("agg_por_cargo")
+tabela_aggnm_solicitante.coalesce(1).write.mode('overwrite').option('header', "true").csv("agg_por_solicitante")
+tabela_aggnm_diaria.coalesce(1).write.mode('overwrite').option('header', "true").csv("agg_por_diaria")
+
+
+# In[ ]:
+
+
+
 
